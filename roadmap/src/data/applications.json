@@ -1,0 +1,110 @@
+[
+  {
+    "slug": "practera-admin",
+    "name": "Practera Admin",
+    "description": "CakePHP 2.x monolith serving as the admin interface and legacy API backend. Includes Cutie, a modern Angular/Ionic frontend for program management.",
+    "repoUrl": "https://github.com/intersective/practera-admin",
+    "techStack": ["PHP 7.4", "CakePHP 2.x", "Angular 15", "Ionic", "PostgreSQL", "Redis", "Apache"],
+    "layer": "backend",
+    "status": "active"
+  },
+  {
+    "slug": "practera-app",
+    "name": "Practera App (App V2)",
+    "description": "Primary learner-facing application. Provides the student experience for experiential learning programs.",
+    "repoUrl": "https://github.com/intersective/practera-app",
+    "techStack": ["Angular 21", "Ionic 8", "TypeScript", "RxJS", "esbuild", "Vite"],
+    "layer": "frontend",
+    "status": "active"
+  },
+  {
+    "slug": "practera-login-app",
+    "name": "Practera Login App",
+    "description": "Vite + React SPA providing the authentication frontend. Handles passwordless login (magic link + passkey), stack switching, LTI deep linking, and admin management.",
+    "repoUrl": "https://github.com/intersective/practera-login-app",
+    "techStack": ["React 19", "Vite 6", "TypeScript 5", "Tailwind CSS v4", "React Router v7"],
+    "layer": "frontend",
+    "status": "active"
+  },
+  {
+    "slug": "practera-login-api",
+    "name": "Practera Login API",
+    "description": "Unified login API handling LTI 1.3, magic link, passkey (WebAuthn), stack switching, and branding. Runs on AWS Lambda.",
+    "repoUrl": "https://github.com/intersective/practera-login-api",
+    "techStack": ["Node.js 20", "Express 5", "TypeScript", "DynamoDB", "AWS Lambda", "WebAuthn"],
+    "layer": "api",
+    "status": "active"
+  },
+  {
+    "slug": "practera-graphql-api",
+    "name": "Practera GraphQL API",
+    "description": "Apollo Server 4 GraphQL API serving the learner app. Connects to PostgreSQL and Redis, proxies to CakePHP for legacy data.",
+    "repoUrl": "https://github.com/intersective/practera-graphql-api",
+    "techStack": ["Apollo Server 4", "Node.js 18", "TypeScript", "PostgreSQL", "Redis", "Drizzle ORM"],
+    "layer": "api",
+    "status": "active"
+  },
+  {
+    "slug": "practera-services",
+    "name": "Practera Services",
+    "description": "TypeScript monorepo of AWS Lambda backend services: email (SES), SMS (Twilio), notifications (Soketi/Pusher), AI (Vercel AI SDK), ops workers, statistics, and templates.",
+    "repoUrl": "https://github.com/intersective/practera-services",
+    "techStack": ["TypeScript", "Node.js 20", "AWS Lambda", "SQS", "SES", "Twilio", "Turborepo"],
+    "layer": "backend",
+    "status": "active"
+  },
+  {
+    "slug": "practera-tusd",
+    "name": "Practera TUS Upload Service",
+    "description": "TUS-compatible resumable file upload server with FileStack migration tooling. NX monorepo with Go and Node.js.",
+    "repoUrl": "https://github.com/intersective/practera-tusd",
+    "techStack": ["Go", "TUS Protocol", "AWS Lambda", "S3", "Pulumi", "NX"],
+    "layer": "infra",
+    "status": "active"
+  },
+  {
+    "slug": "practera-mcp-server",
+    "name": "Practera MCP Server",
+    "description": "Model Context Protocol server giving AI agents direct access to Practera's GraphQL API and project brief data. Includes CLI tools for designer, PM, and developer personas.",
+    "repoUrl": "https://github.com/intersective/practera-mcp-server",
+    "techStack": ["TypeScript", "Node.js 18", "MCP SDK", "Express", "GraphQL Request"],
+    "layer": "tooling",
+    "status": "active"
+  },
+  {
+    "slug": "practera-test-suite",
+    "name": "Practera Test Suite",
+    "description": "Master testing suite: load (k6), security (Nuclei/Wfuzz), functional (Newman), integration, and browser (Playwright) tests. Includes CLI runner and React web dashboard.",
+    "repoUrl": "https://github.com/intersective/practera-test-suite",
+    "techStack": ["TypeScript", "Playwright", "k6", "Newman", "Nuclei", "React", "Vite"],
+    "layer": "tooling",
+    "status": "active"
+  },
+  {
+    "slug": "practera-devops-center",
+    "name": "Practera DevOps Center",
+    "description": "Terminal UI (TUI) application providing a unified control panel for developers and infrastructure admins. Manages local dev stack, cross-repo test orchestration, and production operations.",
+    "repoUrl": "https://github.com/intersective/practera-devops-center",
+    "techStack": ["Rust", "ratatui", "tokio", "crossterm", "AWS SDK", "SQLite"],
+    "layer": "tooling",
+    "status": "active"
+  },
+  {
+    "slug": "project-hub",
+    "name": "Project Hub",
+    "description": "Next.js application for sourcing and managing industry projects and project briefs. Used by coordinators to find real-world projects for learner programs.",
+    "repoUrl": "https://github.com/intersective/project-hub",
+    "techStack": ["Next.js 16", "React 19", "TypeScript", "Tailwind CSS", "PostgreSQL", "SST v3"],
+    "layer": "frontend",
+    "status": "active"
+  },
+  {
+    "slug": "project-brief-ai-generator",
+    "name": "Project Brief AI Generator",
+    "description": "AI-powered tool for generating industry project briefs for experiential learning programs.",
+    "repoUrl": "https://github.com/intersective/project-brief-ai-generator",
+    "techStack": ["TypeScript", "OpenAI", "Node.js"],
+    "layer": "tooling",
+    "status": "active"
+  }
+]

@@ -20,3 +20,14 @@ pvenv/
 # Editor
 .idea/
 *.swp
+
+# Roadmap app (Next.js) inside this repo
+roadmap/node_modules/
+roadmap/.next/
+roadmap/.open-next/
+roadmap/.sst/
+roadmap/.env
+roadmap/.env.local
+roadmap/.env.*.local
+roadmap/exports/
+roadmap/*.tsbuildinfo

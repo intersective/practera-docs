@@ -1,0 +1,26 @@
+[
+  {
+    "name": "Improve ability to source project providers",
+    "priority": 1,
+    "year": 2027,
+    "description": "Make it dramatically easier for coordinators to find and onboard industry project providers at scale. This includes the Product Catalog, Project Brief Generator, and industry partner portal."
+  },
+  {
+    "name": "Improve customer expansion of Practera deployment",
+    "priority": 2,
+    "year": 2027,
+    "description": "Reduce time-to-value for new institutions. Make the platform easier to deploy, configure, and white-label. Includes LMS/LTI improvements, multi-tenancy, and template library."
+  },
+  {
+    "name": "Deliver more value to mentors and project providers",
+    "priority": 3,
+    "year": 2027,
+    "description": "Build richer tools for mentors and industry partners: project visibility, learner progress tracking, feedback workflows, and recognition."
+  },
+  {
+    "name": "Provide offerings direct to learners",
+    "priority": 4,
+    "year": 2027,
+    "description": "Enable learners to discover and enrol in experiential programs without going through an institution. Includes consumer-facing discovery, direct payments, and individual program access."
+  }
+]

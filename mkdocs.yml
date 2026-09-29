@@ -36,6 +36,7 @@ extra_javascript:
 - stylesheets/extra.js
 nav:
 - Home: index.md
+- "What's coming": whats-coming.md
 - Admin Platform:
   - Overview: admin-platform/index.md
   - Getting Started:

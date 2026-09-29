@@ -84,6 +84,22 @@ After the first successful deployment, the site will be available at `https://de
 
 ---
 
+## Roadmap app (`roadmap.practera.com`)
+
+The roadmap Next.js app is deployed by SST from `roadmap/` (see `roadmap/sst.config.ts`). Production hostname: `roadmap.practera.com`. Put the same GitHub-org Access policy in front of it. The app itself has no login screen.
+
+1. In **Zero Trust** → **Access** → **Applications**, add a self-hosted application.
+2. **Application name**: `Practera Roadmap`
+3. **Session duration**: `24 hours`
+4. **Application domain**: `roadmap.practera.com`
+5. Identity provider: the same **GitHub** provider used for Developer Docs.
+6. Access policy: **Allow**, include rule `GitHub organization` = `intersective` (same policy name as Developer Docs is fine: `Intersective GitHub Org Members`).
+7. Save. Confirm an unsigned browser is challenged, and a member of `intersective` can open `https://roadmap.practera.com`.
+
+Local development stays on `https://roadmap.practera.local` inside the devops network and is not covered by this Access application.
+
+---
+
 ## Maintenance Notes
 
 - The developer docs are built from `mkdocs-dev.yml` using MkDocs Material

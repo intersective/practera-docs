@@ -1,0 +1,155 @@
+################################################
+# p2-sandbox Roadmap image — ECR push via OIDC
+# Push to login-refactor auto-builds, pushes :sandbox, and starts the ECS task
+# (desiredCount=1, force new deployment). Idle Lambda still scales to 0 when
+# there is no SSM tunnel (15 min tick, 20 min start grace).
+# Manual Run workflow still works. No PR triggers. No other branches.
+# Account: 977349090554 / ap-southeast-2 only.
+################################################
+
+name: p2-sandbox
+
+on:
+  push:
+    branches:
+      - login-refactor
+    paths-ignore:
+      - '**.md'
+  workflow_dispatch:
+    inputs:
+      INPUT_BRANCH:
+        description: Branch to build. Default login-refactor.
+        required: false
+        default: 'login-refactor'
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  build-push-roadmap:
+    name: Build and push p2-sandbox-roadmap-dev
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      AWS_REGION: ap-southeast-2
+      EXPECTED_ACCOUNT: "977349090554"
+      FORBIDDEN_P1: "478532957254"
+      FORBIDDEN_GLOBAL_LOGIN_STAGE: "497048163947"
+      ECR_REPOSITORY: p2-sandbox-roadmap-dev
+
+    steps:
+      - name: Resolve ref
+        run: |
+          set -euo pipefail
+          if [ "${GITHUB_EVENT_NAME}" = "push" ]; then
+            echo "BRANCH_TAG_NAME=${GITHUB_SHA}" >> "$GITHUB_ENV"
+          elif [ -n "${INPUT_BRANCH:-}" ]; then
+            echo "BRANCH_TAG_NAME=${INPUT_BRANCH}" >> "$GITHUB_ENV"
+          else
+            echo "BRANCH_TAG_NAME=login-refactor" >> "$GITHUB_ENV"
+          fi
+        env:
+          INPUT_BRANCH: ${{ github.event.inputs.INPUT_BRANCH }}
+
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          ref: ${{ env.BRANCH_TAG_NAME }}
+
+      - name: Configure AWS credentials (p2-sandbox OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: ap-southeast-2
+          role-to-assume: arn:aws:iam::977349090554:role/github-restricted-role-to-assume
+          role-session-name: GitHubActions-${{ github.run_id }}
+          role-duration-seconds: 3600
+        env:
+          AWS_ACCESS_KEY_ID: ""
+          AWS_SECRET_ACCESS_KEY: ""
+          AWS_SESSION_TOKEN: ""
+          AWS_DEFAULT_REGION: ""
+          AWS_REGION: ""
+
+      - name: Guard — caller must be p2-sandbox ap-southeast-2
+        env:
+          AWS_REGION: ap-southeast-2
+        run: |
+          set -euo pipefail
+          ACCOUNT=$(aws sts get-caller-identity --query Account --output text)
+          IDENTITY=$(aws sts get-caller-identity --output json)
+          echo "Caller identity (no secrets): account=${ACCOUNT}"
+          echo "${IDENTITY}" | jq -c '{Account,Arn}'
+          if [ "$ACCOUNT" != "$EXPECTED_ACCOUNT" ]; then
+            echo "ERROR: assumed account ${ACCOUNT} != ${EXPECTED_ACCOUNT}" >&2
+            exit 1
+          fi
+          case "$ACCOUNT" in
+            "$FORBIDDEN_P1"|"$FORBIDDEN_GLOBAL_LOGIN_STAGE")
+              echo "ERROR: forbidden account ${ACCOUNT}" >&2
+              exit 1
+              ;;
+          esac
+
+      - name: Require ECR repository (created by p2-sandbox-roadmap-dev CFN)
+        env:
+          AWS_REGION: ap-southeast-2
+        run: |
+          set -euo pipefail
+          if ! aws ecr describe-repositories --repository-names "$ECR_REPOSITORY" --region "$AWS_REGION" >/dev/null 2>&1; then
+            echo "ERROR: ECR ${ECR_REPOSITORY} does not exist." >&2
+            echo "Deploy CloudFormation stack p2-sandbox-roadmap-dev first (practera-devops-center workflow p2-sandbox Roadmap)." >&2
+            exit 1
+          fi
+          echo "ECR_REGISTRY=${EXPECTED_ACCOUNT}.dkr.ecr.${AWS_REGION}.amazonaws.com" >> "$GITHUB_ENV"
+
+      - name: Login to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and push linux/amd64 image
+        env:
+          AWS_REGION: ap-southeast-2
+        run: |
+          set -euo pipefail
+          SHA7=$(echo "$GITHUB_SHA" | cut -c1-7)
+          DATE=$(date -u +%Y%m%d)
+          IMMUTABLE_TAG="${SHA7}-${DATE}"
+          IMAGE_URI="${ECR_REGISTRY}/${ECR_REPOSITORY}"
+          echo "Building ${IMAGE_URI}:${IMMUTABLE_TAG} (linux/amd64)"
+          docker buildx build \
+            --platform linux/amd64 \
+            --file Dockerfile \
+            --tag "${IMAGE_URI}:${IMMUTABLE_TAG}" \
+            --tag "${IMAGE_URI}:sandbox" \
+            --push \
+            .
+          echo "Pushed ${IMAGE_URI}:sandbox and ${IMAGE_URI}:${IMMUTABLE_TAG}"
+
+      - name: Start ECS task (desiredCount=1, new deployment)
+        env:
+          AWS_REGION: ap-southeast-2
+        run: |
+          set -euo pipefail
+          DESIRED=$(aws ecs describe-services \
+            --region "$AWS_REGION" \
+            --cluster p2-sandbox-roadmap-dev \
+            --services p2-sandbox-roadmap-dev \
+            --query 'services[0].desiredCount' \
+            --output text 2>/dev/null || echo missing)
+          if [ "$DESIRED" = "missing" ] || [ "$DESIRED" = "None" ] || [ -z "$DESIRED" ]; then
+            echo "ERROR: ECS service p2-sandbox-roadmap-dev not found." >&2
+            exit 1
+          fi
+          aws ecs update-service \
+            --region "$AWS_REGION" \
+            --cluster p2-sandbox-roadmap-dev \
+            --service p2-sandbox-roadmap-dev \
+            --desired-count 1 \
+            --force-new-deployment \
+            --query 'service.{desired:desiredCount,running:runningCount,pending:pendingCount}' \
+            --output json
+          echo "Task starting on the new :sandbox image. UI is still private — use AWS_PROFILE=p2-sandbox ./aws-tools/roadmap/roadmap-tunnel.sh"
+          echo "Idle Lambda scales desiredCount to 0 when there is no SSM session (15 min tick, 20 min start grace)."
