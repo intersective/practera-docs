@@ -54,6 +54,7 @@ nav:
     - Institution Detail: admin-platform/institutions/overview.md
     - Branding: admin-platform/institutions/branding.md
     - Integrations: admin-platform/institutions/integrations.md
+    - Single Sign-On: admin-platform/institutions/sso.md
     - Data Deletion: admin-platform/institutions/data-deletion.md
   - Users & Enrolments:
     - Users Overview: admin-platform/users/index.md
@@ -77,6 +78,9 @@ nav:
   - Overview: platform/index.md
   - Feature Catalog: platform/feature-catalog.md
   - Strategic Roadmap: platform/strategic-roadmap.md
+- How To:
+  - How To Overview: how-to/index.md
+  - Set up SSO: how-to/set-up-sso.md
 - Help Center:
   - Onboarding:
     - Onboarding Overview: help-articles/onboarding/index.md
@@ -246,6 +250,10 @@ nav:
   - v2.1.5.4: releases/v2.1.5.4.md
   - v2.1.5: releases/v2.1.5.md
   - v2.1.4.5: releases/v2.1.4.5.md
+# Developer-only pages: published on developers.practera.com (mkdocs-dev.yml), not here.
+exclude_docs: |
+  developer/how-to/
+
 markdown_extensions:
 - pymdownx.highlight
 - pymdownx.superfences

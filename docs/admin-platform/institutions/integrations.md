@@ -4,6 +4,8 @@ Connect Practera to your Learning Management System or enable AI-powered feedbac
 
 Navigate to **Institution Menu → Settings → Integrations** to configure external tool connections.
 
+Looking for single sign-on with Microsoft Entra ID or SAML? See [Single Sign-On](sso.md).
+
 ![Screenshot](../../assets/placeholder.png)
 
 ---

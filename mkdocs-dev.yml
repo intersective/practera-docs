@@ -64,5 +64,7 @@ nav:
   - API Reference:
     - Overview: developer/api/index.md
   - Roadmap: developer/roadmap.md
+  - How To:
+    - Test SSO: developer/how-to/test-sso.md
   - Site Setup:
     - Cloudflare / Auth Setup: developer/cloudflare-setup.md
