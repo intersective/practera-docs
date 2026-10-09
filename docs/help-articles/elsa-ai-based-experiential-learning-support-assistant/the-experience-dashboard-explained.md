@@ -54,9 +54,9 @@ The four columns represent stages of the moderated assessment life cycle.
 
 ![Image](assets/images/elsa-ai-based-experiential-learning-support-assistant/the-experience-dashboard-explained/Screenshot-2024-01-25-at-2.22.29-pm-1024x321.png)
 
-If you click on the recommendations tab at the top of this page, you will find a list of ELSA recommendations – your AI-driven Experiential Learning Support Assistant (not the Frozen character, but we like your thinking).
-ELSA flags issues to the coordinator that are important to quality experiential learning. These are small issues before they become bigger **issues, such as overdue submissions, overdue reviews, or team dissonance.**
-In a couple of clicks, you can **send impactful interventions to keep the cohort on track** and ensure positive participant experiences.
+ELSA groups the same kind of problem together and names the people and teams involved. Open a card to place a learner on a team, assign a reviewer, or send one chat. You can also switch the board to group everything by team. What you resolve fills the ring at the top of the tab.
+
+If you click on the recommendations tab at the top of this page, you will find a list of ELSA recommendations – your Experiential Learning Support Assistant.
 
 ---
 
