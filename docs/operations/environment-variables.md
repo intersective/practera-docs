@@ -2,6 +2,23 @@
 
 This page describes every environment variable that flows through the Practera platform, how it is injected in each environment, and the checklist to follow when adding a new variable.
 
+## Canonical names
+
+Use these names for shared configuration. Readers still accept the previous name when the canonical one is unset, so an existing deploy keeps working until its env file is updated.
+
+| Setting | Canonical name | Previous names still read |
+|---------|----------------|---------------------------|
+| Postgres database name | `DB_NAME` | `DB_DATABASE` |
+| Postgres host, port, user, password | `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD` | `POSTGRES_HOST`, `POSTGRES_PORT`, `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB` on the test dashboard only |
+| Login RSA public key (PEM or base64) | `LOGIN_PUBLIC_KEY` | `JWT_PUBLIC_KEY` (Project Hub), `LOGIN_JWTPUB`, JSON `{"public":"..."}` in `LOGIN_JWT`. `PRACTERA_JWT` is that same JSON; sandbox copies it into `LOGIN_JWT` |
+| Login RSA private key | `LOGIN_PRIVATE_KEY` | |
+| GraphQL service-token signing key | `JWT_PRIVATE` | Loaded from Secrets Manager `JwtSecret` outside local |
+| Full Postgres URL (Project Hub, Drizzle, agent) | `DATABASE_URL` | Built from `DB_*` when a service does not take a URL |
+
+`POSTGRES_DB`, `POSTGRES_USER`, and `POSTGRES_PASSWORD` stay on the Postgres container. Those names belong to the database image. Application services use `DB_*`.
+
+`LOGIN_PRIVATE_KEY` and `JWT_PRIVATE` are different RSA private keys. The login key signs login tokens. The GraphQL key signs platform `apikey` tokens and service calls. `LOGIN_PUBLIC_KEY` verifies login tokens only. `PRACTERA_JWT` is the public half of `JWT_PRIVATE`.
+
 ---
 
 ## How env vars are injected
@@ -86,10 +103,10 @@ packaged into the Lambda ZIP before deploy.
 
 | Variable | Source | Notes |
 |----------|--------|-------|
-| `DB_HOST` / `DB_PORT` / `DB_NAME` / `DB_USER` / `DB_PASSWORD` | Computed + `CoreDBSecret` SM | |
+| `DB_HOST` / `DB_PORT` / `DB_NAME` / `DB_USER` / `DB_PASSWORD` | Computed + `CoreDBSecret` SM | `DB_DATABASE` is the previous name for `DB_NAME` |
 | `REDIS_HOST` / `REDIS_PORT` | Computed | |
 | `PRACTERA_DOMAIN` | Computed | Used for file URL formatting |
-| `JWT_PUBLIC_KEY` | `JwtPubSecret` SM | |
+| `LOGIN_PUBLIC_KEY` | `JwtPubSecret` SM (`.public`) | `JWT_PUBLIC_KEY`, `LOGIN_JWTPUB`, `LOGIN_JWT`, and `PRACTERA_JWT` are previous names for the same public key |
 | `CLOUDFRONT_PRIVATE_KEY` | GitHub Actions secret | |
 
 > **Note:** `PRACTERA_GRAPHQL_URL` is **not used** by the GraphQL API itself — it *is* the

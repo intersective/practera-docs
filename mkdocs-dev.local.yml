@@ -1,0 +1,4 @@
+# Local developer docs, served at https://docs.practera.local/developer/
+# Production builds keep mkdocs-dev.yml (developers.practera.com).
+INHERIT: mkdocs-dev.yml
+site_url: https://docs.practera.local/developer/
